@@ -7,6 +7,7 @@ la resistencia en cada paso.
 -------------------------------------------------------------------
 2025-04-17
 Autor: Elian Urtubey, Federico Huxhagen, M. Real
+Co-author: the AI
 """
 
 

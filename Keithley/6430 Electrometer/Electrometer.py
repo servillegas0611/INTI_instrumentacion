@@ -1,5 +1,37 @@
-# IN THIS PROGRAM THE CURRENT IS MEASURED
-# USING THE HP3245A WITH THE KEITHLEY ELECTROMETER
+
+"""
+--------------------------------------------------------
+ Automatic Measurement Program with Keithley 6430
+--------------------------------------------------------
+
+⚠️ IMPORTANT:
+This program is intended **only** for automatic
+measurements using the Keithley electrometer
+in source (generator) mode.
+
+By selecting the index, you specify which
+quantity is being measured:
+    - 0 → Voltage
+    - 1 → Current
+    - 2 → Resistance
+
+Measurement settings must be configured
+manually on the instrument. For example:
+    - Set the range to 20 V when measuring ~19 V
+
+The program will automatically:
+    - Control the instrument via PyVISA
+    - Perform 10 measurements
+    - Create a timestamped .txt file
+      with the results
+    - Play a buzzer sound at the end to
+      indicate that the measurement is finished
+
+Requirements:
+    - Python 3.x
+    - pyvisa library
+"""
+
 import os
 import pyvisa
 import time
@@ -8,15 +40,18 @@ import winsound
 
 print("\n")
 
-index = 1   #  0=voltage, 1=current, 2=resistance
+index = 0   #  0=voltage, 1=current, 2=resistance
 
 #index = int(input("Enter 0 for voltage, 1 for current, 2 for resistance: "))
 if index == 0:
             units ='Volt'
+            parameter='VOLT'
 elif index == 1:
             units ='Ampere'
+            parameter='CURR'
 elif index == 2:
             units ='Ohm'
+            parameter='RES'    
 
 # Generate file name with current date and time
 now = datetime.now()
@@ -43,6 +78,10 @@ Keithley.read_termination = '\n'
 Keithley.write(':OUTP ON')              # Enable output
 
 values_float = []
+rango= Keithley.query(':SENS:{}:RANG?'.format(parameter)) 
+print('Range:', rango.strip())
+output_file.write(rango.strip())
+
 
 print("\nTaking 10 measurements, one every 5 seconds...\n")
 for i in range(10):

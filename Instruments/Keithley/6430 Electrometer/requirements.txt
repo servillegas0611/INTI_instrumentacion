@@ -1,0 +1,3 @@
+pyvisa>=1.13.0
+# Optional backend if you don't have NI-VISA:
+pyvisa-py>=0.7.0
